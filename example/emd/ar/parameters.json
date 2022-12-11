@@ -1,0 +1,16 @@
+{
+    "type_map": ["Ar"],
+    "mass_map": [40],
+    "temperature":60,
+    "time_step": 0.001,
+    "thermo_print_interval": 10,
+    "traj_print_interval": 1000,
+    "structure":"./data.ar",
+    "is_two-body-potential":true,
+    "force_field":[],
+    "load_force_field":"pair_style lj/cut 10.0 \npair_coeff * * 1.032e-2 3.405 \n",
+    "num_configurations":10,
+    "NVT_steps":10000,
+    "NVE_steps":200000
+
+}
