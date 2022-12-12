@@ -1,0 +1,15 @@
+{
+    "type_map": ["H","O"],
+    "mass_map": [1,16],
+    "temperature":408,
+    "time_step": 0.0002,
+    "thermo_print_interval": 10,
+    "traj_print_interval": 1000,
+    "structure":"./data.water",
+    "force_field":["frozen_model_compressed.pb"],
+    "load_force_field":"pair_style deepmd frozen_model_compressed.pb\npair_coeff * *\n",
+    "num_configurations":10,
+    "NVT_steps":1000000,
+    "NVE_steps":1800000
+
+}
