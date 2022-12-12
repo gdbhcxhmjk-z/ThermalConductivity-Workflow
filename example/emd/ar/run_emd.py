@@ -13,8 +13,6 @@ except ImportError:
     path.append('..')
     import sportran as st
 
-from dflow import config, s3_config
-
 
 class RunNVT(OP):
     def __init__(self):
