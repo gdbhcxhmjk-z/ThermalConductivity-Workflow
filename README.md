@@ -15,9 +15,66 @@ It it necessary to emphasize that, the computational nodes and monitor nodes are
 Instructions of dflow installation are provided in detail on its [Github page](https://github.com/deepmodeling/dflow#Installdflow). Prerequisites of dflow usage are Docker and Kubenetes, where their main pages ([Docker](https://docs.docker.com/engine/install/) &amp; [Kubenetes](https://kubernetes.io/docs/tasks/tools/) include how you can install them. Besides, dflow repo also provides with easy-install shell scripts on [dflow/scripts](https://github.com/deepmodeling/dflow/tree/master/scripts) to install Docker &amp; Kubenetes &amp; dflow and make port-forwarding.
 
 ## Installation of computational environment
-The computational environment is supported by several third-party python packages.The following packages should be installed with conda both on host &amp; computing machine:
+The computational environment is supported by several third-party python packages.The following packages should be installed  both on host &amp; computing machines:
 * deepmd-kit & plumed lammps
 * dpdata
 * matplotlib
-* sportran
+* [sportran](https://sportran.readthedocs.io/en/latest/README.html#installation)
+
+One may create a GPU environment containing the GPU version of DeePMD-kit and LAMMPS as following commands.Or look for more detailed installation options in deepmd-kit [easy-install](https://github.com/deepmodeling/deepmd-kit/blob/master/doc/install/easy-install.md)
+```bash
+conda create -n deepmd deepmd-kit=*=*gpu libdeepmd=*=*gpu lammps cudatoolkit=11.6 horovod -c https://conda.deepmodeling.com -c defaults
+```
+
+One can install other packages with following commands:
+```bash
+conda install -c conda-forge dpdata
+pip install sportran
+conda install -c conda-forge matplotlib-base
+```
+# Workflow Framework
+## EMD(Equilibrium Molecular Dynamics Simulations) 
+The process of computing thermal conductivities is as follows:
+
+```mermaid
+graph TD
+A[Initial Structure & Force Field] -->|LAMMPS| B{NVT}
+B --> C[Structure 1]
+B --> D[Structure 2]
+B --> E[...]
+B --> F[Structure N]
+C -->|randon velocity| C1{NVE}
+D -->|randon velocity| D1{NVE}
+E -->|randon velocity| E1{NVE}
+F -->|randon velocity| F1{NVE}
+C1 --> G[Heat Fluxes & Mass Fluxes]
+D1 --> G[Heat Fluxes & Mass Fluxes]
+E1 --> G[Heat Fluxes & Mass Fluxes]
+F1 --> G[Heat Fluxes & Mass Fluxes]
+G -->|Sportran| H{Cesptral Analysis}
+G --> |Direct Method| J{Green-Kubo Formula}
+H --> I[Theraml Conductivity]
+```
+
+```mermaid
+graph TD
+A[Initial Cell] -->B{Cell Expansion along One Axis}
+B -->|e.g. 6x3x2| C[Cell 1]
+B -->|e.g. 15x3x2| D[Cell 2]
+B -->|...| E[...]
+B -->|e.g. 50x3x2| F[Cell N]
+C -->|Langevin| C1{NEMD}
+D -->|Langevin| D1{NEMD}
+E -->|Langevin| E1{NEMD}
+F -->|Langevin| F1{NEMD}
+C1 --> C2[Temperature Gradient & Kappa 1]
+D1 --> D2[Temperature Gradient & Kappa 2]
+E1 --> E2[Temperature Gradient & Kappa ...]
+F1 --> F2[Temperature Gradient & Kappa N]
+C2 -->G{Linear extrapolation}
+D2 -->G{Linear extrapolation}
+E2 -->G{Linear extrapolation}
+F2 -->G{Linear extrapolation}
+G -->H[Thermal Conductivity]
+```
 
