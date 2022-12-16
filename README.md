@@ -34,11 +34,11 @@ conda install -c conda-forge matplotlib-base
 ```
 # Workflow Framework
 ## EMD(Equilibrium Molecular Dynamics Simulations) 
-The process of computing thermal conductivities is as follows:
+The process of computing thermal conductivities with EMD is as follows:
 
 ```mermaid
 graph TD
-A[Initial Structure & Force Field] -->|LAMMPS| B{NVT}
+A[Initial Structure and Force Field] -->|LAMMPS| B{NVT}
 B --> C[Structure 1]
 B --> D[Structure 2]
 B --> E[...]
@@ -47,15 +47,15 @@ C -->|randon velocity| C1{NVE}
 D -->|randon velocity| D1{NVE}
 E -->|randon velocity| E1{NVE}
 F -->|randon velocity| F1{NVE}
-C1 --> G[Heat Fluxes & Mass Fluxes]
-D1 --> G[Heat Fluxes & Mass Fluxes]
-E1 --> G[Heat Fluxes & Mass Fluxes]
-F1 --> G[Heat Fluxes & Mass Fluxes]
+C1 --> G[Heat Fluxes and Mass Fluxes]
+D1 --> G[Heat Fluxes and Mass Fluxes]
+E1 --> G[Heat Fluxes and Mass Fluxes]
+F1 --> G[Heat Fluxes and Mass Fluxes]
 G -->|Sportran| H{Cesptral Analysis}
-G --> |Direct Method| J{Green-Kubo Formula}
 H --> I[Theraml Conductivity]
 ```
-
+## NEMD(Non-Equilibrium Molecular Dynamics Simulations) 
+The process of computing thermal conductivities with NEMD is as follows:
 ```mermaid
 graph TD
 A[Initial Cell] -->B{Cell Expansion along One Axis}
@@ -67,10 +67,10 @@ C -->|Langevin| C1{NEMD}
 D -->|Langevin| D1{NEMD}
 E -->|Langevin| E1{NEMD}
 F -->|Langevin| F1{NEMD}
-C1 --> C2[Temperature Gradient & Kappa 1]
-D1 --> D2[Temperature Gradient & Kappa 2]
-E1 --> E2[Temperature Gradient & Kappa ...]
-F1 --> F2[Temperature Gradient & Kappa N]
+C1 --> C2[Temperature Gradient and Kappa 1]
+D1 --> D2[Temperature Gradient and Kappa 2]
+E1 --> E2[Temperature Gradient and Kappa ...]
+F1 --> F2[Temperature Gradient and Kappa N]
 C2 -->G{Linear extrapolation}
 D2 -->G{Linear extrapolation}
 E2 -->G{Linear extrapolation}
