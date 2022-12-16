@@ -1,7 +1,7 @@
 # Table of contents
 - [About ThermalConductivity-Workflow](#ThermalConductivity-Workflow)
 - [Workflow Framework](#Workflow-Framework)
-
+- [Prepare Input File](#Prepare-input-file)
 # About ThermalConductivity-Workflow
 ThermalConductivity-Workflow is designed to compute thermal conductivity of different materials based on Non-Equilibrium &amp; Equilibrium Molecular Dynamics Simulations.It is supported by [dflow](https://github.com/deepmodeling/dflow), a Python framework for constructing scientific computing workflows.
 
@@ -78,7 +78,7 @@ E2 -->G{Linear extrapolation}
 F2 -->G{Linear extrapolation}
 G -->H[Thermal Conductivity]
 ```
-# Input Files
+# Prepare Input Files
 Firstly, we introduce the input files required for the ThermalConductivity.Input files in example/ have been prepared. 
 The following files is needed:
 * data.lammps, the input structure file of lammps format
@@ -111,7 +111,7 @@ source activate your-env-name
  The relevant settings of dflow should also be setted in run.py
  
 ## Prepare parameters.json
-
+### parameters.json of EMD
 parameters.json for emd in /example/emd/H2O 
 ```Json
 {
@@ -131,4 +131,32 @@ parameters.json for emd in /example/emd/H2O
 }
 ```
 
+Description of parameters
 
+| Parameters| Type          | Description  |
+| --------------------- | ---------------------- | -------------------------- |
+| type_map     | List of str       |                   |
+
+
+### parameters.json of NEMD
+```Json
+{
+    "type_map": ["H","O"],
+    "mass_map": [1,16],
+    "time_step": 0.0005,
+    "supercell": [[4,1,1],[5,1,1],[6,1,1],[8,1,1],[10,1,1],[15,1,1]],
+    "temperature":408,
+    "temperature_difference":30,
+    "linear_scale":[0.10,0.90],
+    "thermo_print_interval": 1000,
+    "traj_print_interval": 1000,
+    "structure":"./data.water",
+    "force_field":["frozen_model_compressed.pb"],
+    "load_force_field":"pair_style deepmd frozen_model_compressed.pb\npair_coeff * *\n",
+    "langevin_damp":0.5,
+    "NVT_steps":20000,
+    "NEMD_equilibrium_steps":200000,
+    "NEMD_production_steps":2000000,
+    "num_configurations":10
+}
+```
