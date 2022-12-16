@@ -1,5 +1,6 @@
 # Table of contents
 - [About ThermalConductivity-Workflow](#ThermalConductivity-Workflow)
+- [Workflow Framework](#Workflow-Framework)
 
 # About ThermalConductivity-Workflow
 ThermalConductivity-Workflow is designed to compute thermal conductivity of different materials based on Non-Equilibrium &amp; Equilibrium Molecular Dynamics Simulations.It is supported by [dflow](https://github.com/deepmodeling/dflow), a Python framework for constructing scientific computing workflows.
@@ -77,4 +78,57 @@ E2 -->G{Linear extrapolation}
 F2 -->G{Linear extrapolation}
 G -->H[Thermal Conductivity]
 ```
+# Input Files
+Firstly, we introduce the input files required for the ThermalConductivity.Input files in example/ have been prepared. 
+The following files is needed:
+* data.lammps, the input structure file of lammps format
+* run.py, the main code to run the whole workflow, run_emd.py and run_nemd.py have been prepared
+* parameters.json, the settings for simulations and tasks
+* input_gen.py, the code to generate corresponding lammps input file
+* force field(if needed), the force field file used in lammps MD
+
+## Prepare run.py
+The Function **slurm_remote_executor** should be setted for using remote computing resources. The varible **'your-jobname'**,**'your-env'** and **'your-workdir'** should be replaced in actual use
+
+ ```Python
+ slurm_remote_executor = SlurmRemoteExecutor(
+        host="",
+        port=22,
+        username="",
+        password="",
+        header="""#!/bin/bash
+#SBATCH --job-name="your-jobname"
+#SBATCH --error=./err.txt
+#SBATCH --output=./stdout.inf
+#SBATCH --gpus=1
+#SBATCH --time=1000:00:00
+source activate your-env-name
+        """,
+        workdir="/your-workdir"+"/{{workflow.name}}/{{pod.name}}",
+    )
+ ```
+ 
+ The relevant settings of dflow should also be setted in run.py
+ 
+## Prepare parameters.json
+
+parameters.json for emd in /example/emd/H2O 
+```Json
+{
+    "type_map": ["C","H"],
+    "mass_map": [12.0107,1.00794],
+    "temperature":300,
+    "time_step": 0.0005,
+    "thermo_print_interval": 10,
+    "traj_print_interval": 1000,
+    "structure":"./data.pentacene3x3x3",
+    "is_two-body-potential":false,
+    "force_field":["frozen_model_compressed.pb"],
+    "load_force_field":"pair_style deepmd frozen_model_compressed.pb\npair_coeff * *\n",
+    "num_configurations":50,
+    "NVT_steps":1000000,
+    "NVE_steps":2000000
+}
+```
+
 
