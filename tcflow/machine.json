@@ -1,0 +1,10 @@
+{
+    "machine_type":"lbg"
+    "email": "",
+    "password": "",
+    "program_id":,
+    "lammps_images":"",
+    "tc_images":"",
+    "cpu_scass_type": "",
+    "gpu_scass_type": ""
+}

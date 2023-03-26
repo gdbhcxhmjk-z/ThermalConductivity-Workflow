@@ -12,5 +12,4 @@
     "num_configurations":50,
     "NVT_steps":1000000,
     "NVE_steps":2000000
-
 }
