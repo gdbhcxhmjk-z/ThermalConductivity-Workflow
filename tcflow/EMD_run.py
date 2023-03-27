@@ -8,9 +8,9 @@ import numpy as np
 import time
 from monty.serialization import loadfn
 
-import dflowTC
-from dflowTC.EMD_OPs import RunNVT,RunNVE,MakeConfigurations,analysis
-from dflowTC.input_gen import NVT_input,NVE_input
+import tcflow
+from tcflow.EMD_OPs import RunNVT,RunNVE,MakeConfigurations,analysis
+from tcflow.input_gen import NVT_input,NVE_input
 
 from dflow.plugins import bohrium
 from dflow.plugins.bohrium import TiefblueClient
@@ -82,18 +82,18 @@ if __name__ == "__main__":
 
     wf = Workflow("emd-tc")
     NVT = Step("NVT",
-                PythonOPTemplate(RunNVT,image=lammps_image),
+                PythonOPTemplate(RunNVT,image=lammps_image,python_packages=[tcflow.__path__[0]],),
                 artifacts={"data":data_input,"input":NVT_input,"input_gen":gen,"force_field":force_field},
                 executor=gpu_dispatcher_executor)
     wf.add(NVT)
     Configurations=Step("Config",
-                PythonOPTemplate(MakeConfigurations,image=tc_image,upload_python_packages=[dflowTC.__path__[0]]),
+                PythonOPTemplate(MakeConfigurations,image=tc_image),
                 parameters={"numb_lmp":param['num_configurations']},
                 artifacts={"dump": NVT.outputs.artifacts["dump"]},
                 executor=cpu_dispatcher_executor)
     wf.add(Configurations)
     NVE = Step("NVE",
-                 PythonOPTemplate(RunNVE,image=lammps_image,
+                 PythonOPTemplate(RunNVE,image=lammps_image,python_packages=[tcflow.__path__[0]],
                                   slices=Slices("{{item}}",
                                                 #sub_path=True,
                                                 input_parameter=["name"],
@@ -108,7 +108,7 @@ if __name__ == "__main__":
                  executor=gpu_dispatcher_executor)
     wf.add(NVE)
     thermal_conductivity = Step("cepstral-analysis",
-                PythonOPTemplate(analysis,image=tc_image,upload_python_packages=[dflowTC.__path__[0]]),
+                PythonOPTemplate(analysis,image=tc_image,),
                 parameters={"param":param},
                 artifacts={"dat": NVE.outputs.artifacts["dat"]},
                 executor=cpu_dispatcher_executor)

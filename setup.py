@@ -4,8 +4,8 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="dflow_thermal-conductivity",
-    version="0.0.1",
+    name="tcflow",
+    version="0.0.4",
     author="Wenjie Zhang",
     author_email="gdbhcxhmjk@163.com",
     description="A framework for thermal conductivity calculation based on EMD&NEMD methods",
@@ -17,7 +17,7 @@ setuptools.setup(
         "pydflow>=1.6.27",
         "lbg>=1.2.13",
         "dpdata>=0.2.7",
-        "matplotlib",
+        "matplotlib>=3.6.3",
         "sportran",
         "numpy",
     ],
@@ -27,5 +27,5 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.8',
-    provides=["dflowTC"]
+    provides=["tcflow"]
 )
