@@ -6,6 +6,7 @@
     "thermo_print_interval": 10,
     "traj_print_interval": 1000,
     "structure":"./data.water",
+    "is_two-body-potential":false,
     "force_field":["frozen_model_compressed.pb"],
     "load_force_field":"pair_style deepmd frozen_model_compressed.pb\npair_coeff * *\n",
     "num_configurations":10,

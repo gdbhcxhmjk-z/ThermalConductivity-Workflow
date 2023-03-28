@@ -101,7 +101,7 @@ reset_timestep  0
 """
     return file
 
-def compute_flux(file,NVE_steps):
+def compute_flux(file,flag,NVE_steps):
     file +="""
 #####################################################################
 #                 NVE Simulation: Production
@@ -110,7 +110,12 @@ def compute_flux(file,NVE_steps):
 #Compute heat flux & mass mass_flux
 compute KE all ke/atom
 compute PE all pe/atom
-compute V all centroid/stress/atom NULL virial
+"""
+    if(flag):
+        file+="compute V all stress/atom NULL virial"
+    else:
+        file+="compute V all centroid/stress/atom NULL virial"
+    file+="""
 compute J all heat/flux KE PE V
 compute cc1 all chunk/atom type
 compute vcm all vcm/chunk cc1
@@ -215,7 +220,7 @@ def NVE_input(param):
     NVE = energy_minimization(NVE)
     NVE = velocity_initialization(NVE)
     NVE = NVT_equilibrium(NVE,param['NVT_steps'])
-    NVE = compute_flux(NVE,param['NVE_steps'])
+    NVE = compute_flux(NVE,param['is_two-body-potential'],param['NVE_steps'])
     with open("in.lammps",'w') as fp:
         fp.write(NVE)
 
