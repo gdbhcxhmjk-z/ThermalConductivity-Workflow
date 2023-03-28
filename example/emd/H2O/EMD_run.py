@@ -45,7 +45,6 @@ if __name__ == "__main__":
     NVT_input = upload_artifact("NVT.lammps")
     data_input = upload_artifact(param["structure"])
     force_field = upload_artifact(param["force_field"])
-    extract_input = upload_artifact("extract_lammps_thermo.sh")
     gen = upload_artifact("input_gen.py")
     gpu_dispatcher_executor = DispatcherExecutor(
         machine_dict={
@@ -102,7 +101,7 @@ if __name__ == "__main__":
                                                 )
                                   ),
                  parameters={"name":Configurations.outputs.parameters["name"],"param":param,},
-                 artifacts={"data":Configurations.outputs.artifacts["configurations"],"extract_sh":extract_input,"input_gen":gen,"force_field":force_field},
+                 artifacts={"data":Configurations.outputs.artifacts["configurations"],"input_gen":gen,"force_field":force_field},
                  with_param=argo_range(param['num_configurations']),
                  key="nve-{{item}}",
                  executor=gpu_dispatcher_executor)
