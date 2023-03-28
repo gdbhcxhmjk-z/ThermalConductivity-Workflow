@@ -97,7 +97,7 @@ if __name__ == "__main__":
                                                 #sub_path=True,
                                                 input_parameter=["name"],
                                                 input_artifact=["data"],
-                                                output_artifact=["dat","log"],
+                                                output_artifact=["dat"],
                                                 )
                                   ),
                  parameters={"name":Configurations.outputs.parameters["name"],"param":param,},
