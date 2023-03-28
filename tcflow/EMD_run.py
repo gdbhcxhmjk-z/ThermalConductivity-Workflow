@@ -8,8 +8,9 @@ import numpy as np
 import time
 from monty.serialization import loadfn
 
-import tcflow
-from tcflow.EMD_OPs import RunNVT,RunNVE,MakeConfigurations,analysis
+import tcflow,matplotlib,sportran
+from tcflow.EMD_MD_OPs import RunNVT,RunNVE
+from tcflow.EMD_reprocess_OPs import MakeConfigurations,analysis
 from tcflow.input_gen import NVT_input,NVE_input
 
 from dflow.plugins import bohrium
@@ -33,8 +34,7 @@ bohrium.config["password"] = password
 bohrium.config["program_id"] = program_id
 s3_config["repo_key"] = "oss-bohrium"
 s3_config["storage_client"] = TiefblueClient()
-
-
+upload_python_packages=[tcflow.__path__[0],matplotlib.__path__[0],sportran.__path__[0]]
 
 
 if __name__ == "__main__":
@@ -82,7 +82,7 @@ if __name__ == "__main__":
 
     wf = Workflow("emd-tc")
     NVT = Step("NVT",
-                PythonOPTemplate(RunNVT,image=lammps_image,python_packages=[tcflow.__path__[0]],),
+                PythonOPTemplate(RunNVT,image=lammps_image,python_packages=upload_python_packages,),
                 artifacts={"data":data_input,"input":NVT_input,"input_gen":gen,"force_field":force_field},
                 executor=gpu_dispatcher_executor)
     wf.add(NVT)
@@ -93,7 +93,7 @@ if __name__ == "__main__":
                 executor=cpu_dispatcher_executor)
     wf.add(Configurations)
     NVE = Step("NVE",
-                 PythonOPTemplate(RunNVE,image=lammps_image,python_packages=[tcflow.__path__[0]],
+                 PythonOPTemplate(RunNVE,image=lammps_image,python_packages=upload_python_packages,
                                   slices=Slices("{{item}}",
                                                 #sub_path=True,
                                                 input_parameter=["name"],

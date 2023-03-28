@@ -92,9 +92,11 @@ fix NVT all nvt temp ${T} ${T} ${nvt_damp}
 timestep ${DT}
 thermo_style custom step temp press vol
 thermo ${thermo_print_interval}
+dump NVT_equilibrium all custom ${traj_print_interval} NVT.lammpstrj id type x y z
 """
     file +=f"""run {steps}
 unfix NVT
+undump NVT_equilibrium
 reset_timestep  0
 """
     return file

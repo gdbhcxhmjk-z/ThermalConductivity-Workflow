@@ -13,108 +13,6 @@ except ImportError:
     path.append('..')
     import sportran as st
 
-class RunNVT(OP):
-    def __init__(self):
-        pass
-
-    @classmethod
-    def get_input_sign(cls):
-        return OPIOSign({
-            "data":Artifact(Path),
-            "input": Artifact(Path),
-            "input_gen":Artifact(Path),
-            "force_field":Artifact(List[Path]),
-        })
-
-    @classmethod
-    def get_output_sign(cls):
-        return OPIOSign({
-            "dump":Artifact(Path),
-            "log": Artifact(Path),
-        })
-
-    @OP.exec_sign_check
-    def execute(
-            self,
-            op_in: OPIO,
-    ) -> OPIO:
-        input =op_in["input"]
-        data = op_in["data"]
-        force_field = op_in["force_field"]
-        print(input)
-        print(data)
-        print(force_field)
-        Path('in.lammps').symlink_to(input)
-        Path('data.lammps').symlink_to(data)
-        for field in force_field:
-            Path(field.parts[-1]).symlink_to(field)
-        os.system(f"mpirun -n 1 lmp < in.lammps")
-        logfile=Path("log.lammps")
-        dumpfile=Path("NVT.lammpstrj")
-        op_out = OPIO({
-            "dump":dumpfile,
-            "log":logfile,
-        })
-        return op_out
-
-class RunNVE(OP):
-    def __init__(self):
-        pass
-
-    @classmethod
-    def get_input_sign(cls):
-        return OPIOSign({
-            "name":str,
-            "param":dict,
-            "data":Artifact(Path),
-            "input_gen":Artifact(Path),
-            "extract_sh": Artifact(Path),
-            "force_field":Artifact(List[Path]),
-        })
-
-    @classmethod
-    def get_output_sign(cls):
-        return OPIOSign({
-            "dat": Artifact(Path),
-            "log": Artifact(Path),
-
-        })
-
-    @OP.exec_sign_check
-    def execute(
-            self,
-            op_in: OPIO,
-    ) -> OPIO:
-        name = op_in["name"]
-        param = op_in["param"]
-        data = op_in["data"]
-        gen = op_in["input_gen"]
-        extract_sh = op_in["extract_sh"]
-        force_field = op_in["force_field"]
-        Path('input_gen.py').symlink_to(gen)
-        import input_gen
-        name=Path(name)
-        name.mkdir()
-        cwd = os.getcwd()
-        os.chdir(name)
-        for field in force_field:
-            Path(field.parts[-1]).symlink_to(field)
-        Path('data.lammps').symlink_to(data)
-        Path('extract_lammps_thermo.sh').symlink_to(extract_sh)
-        input_gen.NVE_input(param)
-        os.system(f"mpirun -n 1 lmp < in.lammps")
-        # os.system(f"mv log.lammps {name}.log")
-        # logfile=Path(f"{name}.log")
-        os.system(f"bash extract_lammps_thermo.sh -f log.lammps -d 'DUMP_RUN' > sportran.dat")
-        os.chdir(cwd)
-        logfile=name/"log.lammps"
-        datfile=name/"sportran.dat"
-        op_out = OPIO({
-            "dat":datfile,
-            "log":logfile,
-        })
-        return op_out
-
 class MakeConfigurations(OP):
     def __init__(self):
         pass
@@ -187,7 +85,7 @@ class analysis(OP):
         TEMPERATURE=[]
         VOLUME =[]
         for d in dat:
-            jfile = st.i_o.TableFile(d, group_vectors=True)
+            jfile = st.i_o.LAMMPSLogFile(d, run_keyword='NVE_RUN')
             jfile.read_datalines(start_step=0, NSTEPS=0, select_ckeys=['Temp','Volume', 'J', 'vcm[1]'])
             # energy_flux.append(jfile.data['J'])
             # mass_flux.append(jfile.data['vcm[1]'])
