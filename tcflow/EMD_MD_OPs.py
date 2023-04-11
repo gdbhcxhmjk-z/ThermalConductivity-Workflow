@@ -4,7 +4,7 @@ from dflow import SlurmRemoteExecutor, Step, Workflow, argo_range,upload_artifac
 from dflow.python import OP, OPIO, Artifact, OPIOSign, PythonOPTemplate, Slices
 from pathlib import Path
 import dpdata
-
+from . import input_gen
 
 class RunNVT(OP):
     def __init__(self):
@@ -15,7 +15,7 @@ class RunNVT(OP):
         return OPIOSign({
             "data":Artifact(Path),
             "input": Artifact(Path),
-            "input_gen":Artifact(Path),
+            #"input_gen":Artifact(Path),
             "force_field":Artifact(List[Path]),
         })
 
@@ -60,7 +60,7 @@ class RunNVE(OP):
             "name":str,
             "param":dict,
             "data":Artifact(Path),
-            "input_gen":Artifact(Path),
+            #"input_gen":Artifact(Path),
             "force_field":Artifact(List[Path]),
         })
 
@@ -79,10 +79,10 @@ class RunNVE(OP):
         name = op_in["name"]
         param = op_in["param"]
         data = op_in["data"]
-        gen = op_in["input_gen"]
+        #gen = op_in["input_gen"]
         force_field = op_in["force_field"]
-        Path('input_gen.py').symlink_to(gen)
-        import input_gen
+        #Path('input_gen.py').symlink_to(gen)
+        #import input_gen
         name=Path(name)
         name.mkdir()
         cwd = os.getcwd()

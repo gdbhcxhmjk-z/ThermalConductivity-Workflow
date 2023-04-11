@@ -45,7 +45,7 @@ if __name__ == "__main__":
     NVT_input = upload_artifact("NVT.lammps")
     data_input = upload_artifact(param["structure"])
     force_field = upload_artifact(param["force_field"])
-    gen = upload_artifact("input_gen.py")
+    #gen = upload_artifact("input_gen.py")
     gpu_dispatcher_executor = DispatcherExecutor(
         machine_dict={
             "batch_type": "Bohrium",
@@ -82,7 +82,7 @@ if __name__ == "__main__":
     wf = Workflow("emd-tc")
     NVT = Step("NVT",
                 PythonOPTemplate(RunNVT,image=lammps_image,python_packages=upload_python_packages,),
-                artifacts={"data":data_input,"input":NVT_input,"input_gen":gen,"force_field":force_field},
+                artifacts={"data":data_input,"input":NVT_input,"force_field":force_field},#"input_gen":gen,
                 executor=gpu_dispatcher_executor)
     wf.add(NVT)
     Configurations=Step("Config",
@@ -101,7 +101,7 @@ if __name__ == "__main__":
                                                 )
                                   ),
                  parameters={"name":Configurations.outputs.parameters["name"],"param":param,},
-                 artifacts={"data":Configurations.outputs.artifacts["configurations"],"input_gen":gen,"force_field":force_field},
+                 artifacts={"data":Configurations.outputs.artifacts["configurations"],"force_field":force_field},#"input_gen":gen,
                  with_param=argo_range(param['num_configurations']),
                  key="nve-{{item}}",
                  executor=gpu_dispatcher_executor)
