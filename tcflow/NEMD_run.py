@@ -11,9 +11,9 @@ import time
 from monty.serialization import loadfn
 
 import tcflow,matplotlib,sportran
-from .NEMD_MD_OPs import RunNEMD
-from .NEMD_reprocess_OPs import MakeSuperCells,analysis
-from .input_gen import NVT_input,NVE_input
+from tcflow.NEMD_MD_OPs import RunNEMD
+from tcflow.NEMD_reprocess_OPs import MakeSuperCells,analysis
+from tcflow.input_gen import NVT_input,NVE_input
 try:
     import sportran as st
 except ImportError:
