@@ -9,9 +9,9 @@ import time
 from monty.serialization import loadfn
 
 import tcflow,matplotlib,sportran
-from tcflow.EMD_MD_OPs import RunNVT,RunNVE
-from tcflow.EMD_reprocess_OPs import MakeConfigurations,analysis
-from tcflow.input_gen import NVT_input,NVE_input
+from .EMD_MD_OPs import RunNVT,RunNVE
+from .EMD_reprocess_OPs import MakeConfigurations,analysis
+from .input_gen import NVT_input,NVE_input
 
 from dflow.plugins import bohrium
 from dflow.plugins.bohrium import TiefblueClient
