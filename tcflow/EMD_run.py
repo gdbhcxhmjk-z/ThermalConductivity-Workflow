@@ -18,28 +18,20 @@ from dflow.plugins.bohrium import TiefblueClient
 from dflow import config, s3_config
 from dflow.plugins.dispatcher import DispatcherExecutor
 
-machine_param = loadfn("machine.json")
-email = machine_param.get("email",None)
-password = machine_param.get("password",None)
-program_id = machine_param.get("program_id",None)
-lammps_image = machine_param.get("lammps_image",None)
-tc_image = machine_param.get("tc_image",None)
-cpu_scass_type = machine_param.get("cpu_scass_type",None)
-gpu_scass_type = machine_param.get("gpu_scass_type",None)
-
-config["host"] = "https://workflows.deepmodeling.com"
-config["k8s_api_server"] = "https://workflows.deepmodeling.com"
-bohrium.config["username"] = email
-bohrium.config["password"] = password
-bohrium.config["program_id"] = program_id
-s3_config["repo_key"] = "oss-bohrium"
-s3_config["storage_client"] = TiefblueClient()
-upload_python_packages=[tcflow.__path__[0],matplotlib.__path__[0],sportran.__path__[0]]
-
 
 if __name__ == "__main__":
     # run ../scripts/start-slurm.sh first to start up a slurm cluster
     # from EMD_OPs import RunNVT,RunNVE,MakeConfigurations,analysis
+    machine_param = loadfn("machine.json")
+    email = machine_param.get("email",None)
+    password = machine_param.get("password",None)
+    program_id = machine_param.get("program_id",None)
+    lammps_image = machine_param.get("lammps_image",None)
+    tc_image = machine_param.get("tc_image",None)
+    cpu_scass_type = machine_param.get("cpu_scass_type",None)
+    gpu_scass_type = machine_param.get("gpu_scass_type",None)
+    upload_python_packages=[tcflow.__path__[0],matplotlib.__path__[0],sportran.__path__[0]]
+
     param = loadfn("parameters.json")
     NVT_input(param)
     NVT_input = upload_artifact("NVT.lammps")
