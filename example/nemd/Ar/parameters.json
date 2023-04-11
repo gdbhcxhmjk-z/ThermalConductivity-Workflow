@@ -12,8 +12,8 @@
     "force_field":[],
     "load_force_field":"pair_style lj/cut 10.0 \npair_coeff * * 1.032e-2 3.405 \n",
     "langevin_damp":1.0,
-    "NVT_steps":10000,
-    "NEMD_equilibrium_steps":20000,
-    "NEMD_production_steps":10000,
+    "NVT_steps":100000,
+    "NEMD_equilibrium_steps":200000,
+    "NEMD_production_steps":1000000,
     "num_configurations":10
 }
