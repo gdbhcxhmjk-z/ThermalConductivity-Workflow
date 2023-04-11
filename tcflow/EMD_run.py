@@ -44,7 +44,8 @@ if __name__ == "__main__":
     NVT_input(param)
     NVT_input = upload_artifact("NVT.lammps")
     data_input = upload_artifact(param["structure"])
-    force_field = upload_artifact(param["force_field"])
+    if (param["force_field"]):force_field = upload_artifact(param["force_field"])
+    else:force_field = upload_artifact(param["structure"])
     #gen = upload_artifact("input_gen.py")
     gpu_dispatcher_executor = DispatcherExecutor(
         machine_dict={

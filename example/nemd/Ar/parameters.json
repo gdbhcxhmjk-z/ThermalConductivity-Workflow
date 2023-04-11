@@ -9,10 +9,11 @@
     "thermo_print_interval": 1000,
     "traj_print_interval": 1000,
     "structure":"./data.ar",
-    "force_field":[""],
+    "force_field":[],
     "load_force_field":"pair_style lj/cut 10.0 \npair_coeff * * 1.032e-2 3.405 \n",
     "langevin_damp":1.0,
     "NVT_steps":10000,
     "NEMD_equilibrium_steps":20000,
     "NEMD_production_steps":10000,
+    "num_configurations":10
 }

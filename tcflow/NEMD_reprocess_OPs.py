@@ -151,6 +151,7 @@ class analysis(OP):
         plt.plot(x, extrapolation.intercept + extrapolation.slope*x, 'r')
         extra = plt.Rectangle((0, 0), 0, 0, fc="w", fill=False, edgecolor='none', linewidth=0)
         plt.legend([extra],[f"EXTRAP. 1/K = {extrapolation.intercept:02f}+{extrapolation.slope:02f}*1/L" ],loc="upper left",fontsize="small")
+        plt.ylim(extrapolation.intercept,1.2*max(1/kappa))
         plt.xlabel('1/L($\AA$^-1)')
         plt.ylabel('1/kappa(mK/W)')
         plt.title("Thermal Conductivity:NEMD Extrapolation")

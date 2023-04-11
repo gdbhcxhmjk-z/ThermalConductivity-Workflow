@@ -1,10 +1,10 @@
 {
-    "machine_type":"",
+    "machine_type":"lbg",
     "email": "",
     "password": "",
     "program_id":,
     "lammps_image":"registry.dp.tech/dptech/lammps:23Jun2022-dp2.1.5",
-    "tc_image":"registry.dp.tech/dptech/thermal-conductivity:v0.7",
+    "tc_image":"registry.dp.tech/dptech/thermal-conductivity:v0.8",
     "cpu_scass_type": "c32_m64_cpu",
     "gpu_scass_type": "c4_m15_1 * NVIDIA T4"
 }

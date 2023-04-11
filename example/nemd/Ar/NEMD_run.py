@@ -12,7 +12,7 @@ from monty.serialization import loadfn
 
 import tcflow,matplotlib,sportran
 from tcflow.NEMD_MD_OPs import RunNEMD
-from tcflow.NEMD_reprocess_OPs import MakeConfigurations,analysis
+from tcflow.NEMD_reprocess_OPs import MakeSuperCells,analysis
 from tcflow.input_gen import NVT_input,NVE_input
 try:
     import sportran as st
@@ -49,25 +49,57 @@ upload_python_packages=[tcflow.__path__[0],matplotlib.__path__[0],sportran.__pat
 
 if __name__ == "__main__":
     # run ../scripts/start-slurm.sh first to start up a slurm cluster
-    import input_gen
     with open("parameters.json",'r') as fp :
         param = json.load(fp)
-    input_gen.NVT_input(param)
+    NVT_input(param)
     NVT_input = upload_artifact("NVT.lammps")
     data_input = upload_artifact(param["structure"])
-    force_field = upload_artifact(param["force_field"])
-    gen = upload_artifact("input_gen.py")
+    if (param["force_field"]):force_field = upload_artifact(param["force_field"])
+    else:force_field = upload_artifact(param["structure"])
+    #gen = upload_artifact("input_gen.py")
 
-    wf = Workflow("nemd-heat-conductivity")
+    gpu_dispatcher_executor = DispatcherExecutor(
+        machine_dict={
+            "batch_type": "Bohrium",
+            "context_type": "Bohrium",
+            "remote_profile": {
+                "email": email,
+                "password": password,
+                "program_id": program_id,
+                "input_data": {
+                    "job_type": "container",
+                    "platform": "ali",
+                    "scass_type": gpu_scass_type,
+                },
+            },
+        },
+    )
+    cpu_dispatcher_executor = DispatcherExecutor(
+        machine_dict={
+            "batch_type": "Bohrium",
+            "context_type": "Bohrium",
+            "remote_profile": {
+                "email": email,
+                "password": password,
+                "program_id": program_id,
+                "input_data": {
+                    "job_type": "container",
+                    "platform": "ali",
+                    "scass_type": cpu_scass_type,
+                },
+            },
+        },
+    )
+    wf = Workflow("nemd-tc")
     SuperCell = Step("SuperCells",
                 PythonOPTemplate(MakeSuperCells,image=tc_image),
                 parameters={"param":param},
                 artifacts={"unit_cell":data_input},
-                executor=cpu_scass_type)
+                executor=cpu_dispatcher_executor)
     wf.add(SuperCell)
     NEMD = Step("NEMD",
-                 PythonOPTemplate(RunNEMD,
-                                  slices=Slices("{{item}}",image=lammps_image,python_packages=upload_python_packages,
+                 PythonOPTemplate(RunNEMD,image=lammps_image,python_packages=upload_python_packages,
+                                  slices=Slices("{{item}}",
                                                 #sub_path=True,
                                                 input_parameter=["name"],
                                                 input_artifact=["data"],
@@ -75,15 +107,15 @@ if __name__ == "__main__":
                                                 )
                                   ),
                  parameters={"name":SuperCell.outputs.parameters["name"],"param":param,},
-                 artifacts={"data":SuperCell.outputs.artifacts["supercells"],"input_gen":gen,"force_field":force_field},
+                 artifacts={"data":SuperCell.outputs.artifacts["supercells"],"force_field":force_field},#"input_gen":gen,
                  with_param=argo_range(len(param['supercell'])),
                  key="nemd-{{item}}",
-                 executor=gpu_scass_type)
+                 executor=gpu_dispatcher_executor)
     wf.add(NEMD)
     thermal_conductivity = Step("nemd-extrapolation",
                 PythonOPTemplate(analysis,image=tc_image),
                 parameters={"param":param},
                 artifacts={"dat": NEMD.outputs.artifacts["raw"]},
-                executor=cpu_scass_type)
+                executor=cpu_dispatcher_executor)
     wf.add(thermal_conductivity)
     wf.submit()
