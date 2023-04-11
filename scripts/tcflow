@@ -30,7 +30,7 @@ parser.add_argument("--nemd", help="Using NEMD method to calculate Thermal Condu
                     action="store_true")
 args = parser.parse_args()
 
-if args.vasp:
+if args.emd:
     EMD_run_main()
-elif args.abacus:
+elif args.nemd:
     EMD_run_main()
