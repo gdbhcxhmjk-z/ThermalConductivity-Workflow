@@ -28,7 +28,7 @@ from dflow.plugins.dispatcher import DispatcherExecutor
 
 
 
-def EMD_run_main():
+def NEMD_run_main():
     # run ../scripts/start-slurm.sh first to start up a slurm cluster
     machine_param = loadfn("machine.json")
     email = machine_param.get("email",None)

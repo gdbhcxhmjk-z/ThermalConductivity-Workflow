@@ -19,7 +19,7 @@ from dflow import config, s3_config
 from dflow.plugins.dispatcher import DispatcherExecutor
 
 
-if __name__ == "__main__":
+def EMD_run_main():
     # run ../scripts/start-slurm.sh first to start up a slurm cluster
     # from EMD_OPs import RunNVT,RunNVE,MakeConfigurations,analysis
     machine_param = loadfn("machine.json")
