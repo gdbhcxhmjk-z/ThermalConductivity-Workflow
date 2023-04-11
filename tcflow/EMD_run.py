@@ -11,7 +11,7 @@ from monty.serialization import loadfn
 import tcflow,matplotlib,sportran
 from tcflow.EMD_MD_OPs import RunNVT,RunNVE
 from tcflow.EMD_reprocess_OPs import MakeConfigurations,analysis
-from tcflow.input_gen import NVT_input,NVE_input
+from tcflow import input_gen
 
 from dflow.plugins import bohrium
 from dflow.plugins.bohrium import TiefblueClient
@@ -33,7 +33,7 @@ def EMD_run_main():
     upload_python_packages=[tcflow.__path__[0],matplotlib.__path__[0],sportran.__path__[0]]
 
     param = loadfn("parameters.json")
-    NVT_input(param)
+    input_gen.NVT_input(param)
     NVT_input = upload_artifact("NVT.lammps")
     data_input = upload_artifact(param["structure"])
     if (param["force_field"]):force_field = upload_artifact(param["force_field"])
