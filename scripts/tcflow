@@ -33,4 +33,4 @@ args = parser.parse_args()
 if args.emd:
     EMD_run_main()
 elif args.nemd:
-    EMD_run_main()
+    NEMD_run_main()
