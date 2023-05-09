@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="tcflow",
-    version="0.0.15",
+    version="0.0.16",
     author="Wenjie Zhang",
     author_email="gdbhcxhmjk@163.com",
     description="A framework for thermal conductivity calculation based on EMD&NEMD methods",
@@ -30,6 +30,6 @@ setuptools.setup(
     provides=["tcflow"],
     script=[],
     entry_points={'console_scripts': [
-         'tcflow = scripts.tcflow:tc_main',
+         'tcflow = tcflow.submit:tc_main',
      ]}
 )
