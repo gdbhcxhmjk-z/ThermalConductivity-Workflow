@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+
 
 from dflow import config, s3_config
 from dflow.plugins import bohrium
@@ -23,14 +23,18 @@ s3_config["storage_client"] = TiefblueClient()
 from tcflow.EMD_run import EMD_run_main
 from tcflow.NEMD_run import NEMD_run_main
 
-parser = argparse.ArgumentParser(description='EMD&NEMD Thermal Conductivity Workflow')
-parser.add_argument("--emd", help="Using EMD method to calculate Thermal Conductivity",
-                    action="store_true")
-parser.add_argument("--nemd", help="Using NEMD method to calculate Thermal Conductivity",
-                    action="store_true")
-args = parser.parse_args()
+def tc_main():
+    parser = argparse.ArgumentParser(description='EMD&NEMD Thermal Conductivity Workflow')
+    parser.add_argument("--emd", help="Using EMD method to calculate Thermal Conductivity",
+                        action="store_true")
+    parser.add_argument("--nemd", help="Using NEMD method to calculate Thermal Conductivity",
+                        action="store_true")
+    args = parser.parse_args()
 
-if args.emd:
-    EMD_run_main()
-elif args.nemd:
-    NEMD_run_main()
+    if args.emd:
+        EMD_run_main()
+    elif args.nemd:
+        NEMD_run_main()
+
+if __name__ == "__main__":
+    tc_main()
