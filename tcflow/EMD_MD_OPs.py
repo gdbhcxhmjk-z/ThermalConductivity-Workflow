@@ -14,6 +14,7 @@ class RunNVT(OP):
     def get_input_sign(cls):
         return OPIOSign({
             "data":Artifact(Path),
+            "param":dict,
             "input": Artifact(Path),
             #"input_gen":Artifact(Path),
             "force_field":Artifact(List[Path]),
@@ -41,7 +42,8 @@ class RunNVT(OP):
         Path('data.lammps').symlink_to(data)
         for field in force_field:
             Path(field.parts[-1]).symlink_to(field)
-        os.system(f"mpirun -n 1 lmp < in.lammps")
+        input_gen.NVT_input(param)
+        os.system(f"{param["md_command"]}")
         logfile=Path("log.lammps")
         dumpfile=Path("NVT.lammpstrj")
         op_out = OPIO({
@@ -91,7 +93,7 @@ class RunNVE(OP):
             Path(field.parts[-1]).symlink_to(field)
         Path('data.lammps').symlink_to(data)
         input_gen.NVE_input(param)
-        os.system(f"mpirun -n 1 lmp < in.lammps")
+        os.system(f"{param["md_command"]}")
         os.chdir(cwd)
         logfile=name/"log.lammps"
         op_out = OPIO({
