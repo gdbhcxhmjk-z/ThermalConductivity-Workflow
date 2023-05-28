@@ -69,12 +69,12 @@ def load_machine(machine_param):
             },
         )
         return gpu_dispatcher_executor,cpu_dispatcher_executor
-    elif:type=="cluster":
-        host=machine_param.get("host",None),
-        port=machine_param.get("port",None),
-        username=machine_param.get("username",None),
-        password=machine_param.get("ssh_password",None),
-        remote_root=machine_param.get("remote_root",None),
+    elif type=="cluster":
+        host=machine_param.get("host",None)
+        port=machine_param.get("port",None)
+        username=machine_param.get("username",None)
+        password=machine_param.get("ssh_password",None)
+        remote_root=machine_param.get("remote_root",None)
         md_machine_dict=machine_param.get("md_machine_dict",None)
         md_resources_dict=machine_param.get("md_resources_dict",None)
         analysis_machine_dict=machine_param.get("analysis_machine_dict",None)
