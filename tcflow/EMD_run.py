@@ -123,7 +123,7 @@ def EMD_run_main():
                 executor=gpu_dispatcher_executor)
     wf.add(NVT)
     Configurations=Step("Config",
-                PythonOPTemplate(MakeConfigurations,image="python:3.8" image="python:3.8" if type=="cluster" else tc_image),
+                PythonOPTemplate(MakeConfigurations,image="python:3.8" if type=="cluster" else tc_image),
                 parameters={"numb_lmp":param['num_configurations']},
                 artifacts={"dump": NVT.outputs.artifacts["dump"]},
                 executor=cpu_dispatcher_executor)
