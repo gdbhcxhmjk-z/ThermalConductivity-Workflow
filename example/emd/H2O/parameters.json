@@ -8,9 +8,9 @@
     "structure":"./data.water",
     "is_two-body-potential":false,
     "force_field":["frozen_model_compressed.pb"],
-    "load_force_field":"pair_style deepmd frozen_model_compressed.pb\npair_coeff * *\n",
+    "load_force_field":["pair_style deepmd frozen_model_compressed.pb","pair_coeff * *"],
     "num_configurations":10,
     "NVT_steps":1000000,
-    "NVE_steps":1800000
-
+    "NVE_steps":1800000,
+    "md_command":"mpirun -n 1 lmp < in.lammps"
 }

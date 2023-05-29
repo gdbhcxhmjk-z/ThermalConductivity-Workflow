@@ -51,7 +51,8 @@ def make_structure(file,force_field,mass):
 #####################################################################
 read_data data.lammps
 """
-    file+=force_field+'\n'
+    for l in force_field:
+        file+=l+'\n'
     for i in range(len(mass)):
         file+=f"mass {i+1} {mass[i]} \n"
     return file
@@ -208,7 +209,8 @@ def NVT_input(param):
     NVT = make_structure(NVT,param['load_force_field'],param['mass_map'])
     NVT = energy_minimization(NVT)
     NVT = velocity_initialization(NVT)
-    steps = np.max((param['num_configurations']*param['traj_print_interval']*10,200000))
+    num = param.get("num_configurations",None) if param.get("num_configurations",None) else 0
+    steps = np.max((num*param['traj_print_interval']*10,200000))
     NVT = NVT_equilibrium(NVT,steps)
     with open("NVT.lammps",'w') as fp:
         fp.write(NVT)

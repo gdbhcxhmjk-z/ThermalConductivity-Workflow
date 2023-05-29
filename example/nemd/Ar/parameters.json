@@ -10,10 +10,10 @@
     "traj_print_interval": 1000,
     "structure":"./data.ar",
     "force_field":[],
-    "load_force_field":"pair_style lj/cut 10.0 \npair_coeff * * 1.032e-2 3.405 \n",
+    "load_force_field":["pair_style lj/cut 10.0","pair_coeff * * 1.032e-2 3.405"],
     "langevin_damp":1.0,
     "NVT_steps":1000000,
     "NEMD_equilibrium_steps":2000000,
     "NEMD_production_steps":10000000,
-    "num_configurations":10
+    "md_command":"mpirun -n 1 lmp < in.lammps"
 }

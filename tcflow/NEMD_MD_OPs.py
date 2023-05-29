@@ -50,7 +50,7 @@ class RunNEMD(OP):
             Path(field.parts[-1]).symlink_to(field)
         Path('data.lammps').symlink_to(data)
         input_gen.NEMD_input(param)
-        os.system(f"{param["md_command"]}")
+        os.system(param["md_command"])
         # os.system(f"mv log.lammps {name}.log")
         # logfile=Path(f"{name}.log")
         os.chdir(cwd)

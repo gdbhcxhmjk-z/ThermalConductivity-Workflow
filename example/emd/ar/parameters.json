@@ -8,9 +8,9 @@
     "structure":"./data.ar",
     "is_two-body-potential":true,
     "force_field":[],
-    "load_force_field":"pair_style lj/cut 10.0 \npair_coeff * * 1.032e-2 3.405 \n",
+    "load_force_field":["pair_style lj/cut 10.0","pair_coeff * * 1.032e-2 3.405"],
     "num_configurations":10,
     "NVT_steps":10000,
-    "NVE_steps":200000
-
+    "NVE_steps":200000,
+    "md_command":"mpirun -n 1 lmp < in.lammps"
 }
