@@ -119,7 +119,7 @@ def EMD_run_main():
     wf = Workflow("emd-tc")
     NVT = Step("NVT",
                 PythonOPTemplate(RunNVT,image="python:3.8" if type=="cluster" else lammps_image,python_packages=upload_python_packages,),
-                artifacts={"data":data_input,"input":NVT_input,"force_field":force_field},#"input_gen":gen,
+                artifacts={"data":data_input,"param":param,"input":NVT_input,"force_field":force_field},#"input_gen":gen,
                 executor=gpu_dispatcher_executor)
     wf.add(NVT)
     Configurations=Step("Config",

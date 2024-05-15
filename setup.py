@@ -4,8 +4,8 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="tcflow",
-    version="0.0.22",
+    name="tcflow-tmp",
+    version="0.0.23",
     author="Wenjie Zhang",
     author_email="gdbhcxhmjk@163.com",
     description="A framework for thermal conductivity calculation based on EMD&NEMD methods",

@@ -33,6 +33,7 @@ class RunNVT(OP):
             op_in: OPIO,
     ) -> OPIO:
         input =op_in["input"]
+        param = op_in["param"]
         data = op_in["data"]
         force_field = op_in["force_field"]
         print(input)
