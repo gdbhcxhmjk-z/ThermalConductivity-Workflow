@@ -102,7 +102,8 @@ reset_timestep  0
 """
     return file
 
-def compute_flux(file,flag,NVE_steps):
+def compute_flux(file,flag,NVE_steps,mass):
+    vcm=" ".join([f"c_vcm[{i+1}][1] c_vcm[{i+1}][2] c_vcm[{i+1}][3]" for i in range(len(mass))])
     file +="""
 #####################################################################
 #                 NVE Simulation: Production
@@ -123,8 +124,10 @@ compute vcm all vcm/chunk cc1
 
 #Output Settings
 thermo       ${thermo_print_interval}
-thermo_style custom step time temp pe ke etotal press vol c_J[1] c_J[2] c_J[3] c_vcm[1][1] c_vcm[1][2] c_vcm[1][3]
-## The following line can be uncommented to print the trajectory.
+"""
+    file +=f"""thermo_style custom step time temp pe ke etotal press vol c_J[1] c_J[2] c_J[3] {vcm}
+"""
+    file +="""## The following line can be uncommented to print the trajectory.
 ## sportran.i_o.LAMMPSLogFile will detect this line containing "DUMP_RUN" in the log.lammps file,
 ## it will extract the desired columns, and save the data in numpy binary format
 #dump         DUMP_RUN all custom ${traj_print_interval} silica-run.lammpstrj id type xu yu zu vx vy vz
@@ -222,7 +225,7 @@ def NVE_input(param):
     NVE = energy_minimization(NVE)
     NVE = velocity_initialization(NVE)
     NVE = NVT_equilibrium(NVE,param['NVT_steps'])
-    NVE = compute_flux(NVE,param['is_two-body-potential'],param['NVE_steps'])
+    NVE = compute_flux(NVE,param['is_two-body-potential'],param['NVE_steps'],param['mass_map'])
     with open("in.lammps",'w') as fp:
         fp.write(NVE)
 
